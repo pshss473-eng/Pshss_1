@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download PSHSS Source Code</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0a2463;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .file-list {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #0a2463;
+        }
+        .file-name {
+            font-family: monospace;
+            font-weight: bold;
+        }
+        .download-btn {
+            background: #0a2463;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .download-btn:hover {
+            background: #ff6b35;
+        }
+        .download-all {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .download-all:hover {
+            background: #e55a2b;
+        }
+        .instructions {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 PSHSS School Management System - Source Code</h1>
+        
+        <div class="instructions">
+            <h3>📋 Instructions:</h3>
+            <ol>
+                <li>Click "Download All Files" to get a zip file with all source code</li>
+                <li>Or download individual files using the buttons below</li>
+                <li>Extract the files and run <code>npm install</code> then <code>npm run dev</code></li>
+            </ol>
+        </div>
+
+        <button class="download-all" onclick="downloadAllFiles()">📦 Download All Files as ZIP</button>
+
+        <h3>📁 Individual Files:</h3>
+        <div class="file-list" id="fileList">
+            <!-- Files will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script>
+        const files = {
+            'package.json': `{
+  "name": "pshss-school-management",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lucide-react": "^0.344.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.18",
+    "eslint": "^9.9.1",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.11",
+    "globals": "^15.9.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.3.0",
+    "vite": "^5.4.2"
+  }
+}`,
+            'index.html': `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PSHSS School Management System</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>`,
+            'vite.config.ts': `import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  optimizeDeps: {
+    exclude: ['lucide-react'],
+  },
+});`,
+            'tailwind.config.js': `/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};`,
+            'postcss.config.js': `export default {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};`,
+            'tsconfig.json': `{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}`,
+            'tsconfig.app.json': `{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"]
+}`,
+            'tsconfig.node.json': `{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["vite.config.ts"]
+}`,
+            'src/main.tsx': `import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);`,
+            'src/App.tsx': `import React from 'react';
+import { AuthProvider } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
+import { DataProvider } from './contexts/DataContext';
+import Layout from './components/Layout/Layout';
+import './index.css';
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <DataProvider>
+          <Layout />
+        </DataProvider>
+      </AuthProvider>
+    </ThemeProvider>
+  );
+}
+
+export default App;`,
+            'src/index.css': `@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --admin-primary: #0a2463;
+    --admin-secondary: #ff6b35;
+    --teacher-primary: #2e7d32;
+    --parent-primary: #0288d1;
+    --success: #4caf50;
+    --warning: #ff9800;
+    --danger: #f44336;
+    --light: #f5f5f5;
+    --dark: #212121;
+  }
+
+  [data-theme="dark"] {
+    --light: #212121;
+    --dark: #f5f5f5;
+  }
+
+  * {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  }
+
+  body {
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    background-color: var(--light);
+    color: var(--dark);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  .btn-admin {
+    @apply bg-[var(--admin-primary)] text-white;
+  }
+  
+  .btn-teacher {
+    @apply bg-[var(--teacher-primary)] text-white;
+  }
+  
+  .btn-parent {
+    @apply bg-[var(--parent-primary)] text-white;
+  }
+  
+  .card-admin {
+    @apply border-t-4 border-[var(--admin-primary)];
+  }
+  
+  .card-teacher {
+    @apply border-t-4 border-[var(--teacher-primary)];
+  }
+  
+  .card-parent {
+    @apply border-t-4 border-[var(--parent-primary)];
+  }
+  
+  .form-input {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors;
+  }
+  
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+  }
+  
+  .error-text {
+    @apply text-red-500 text-sm mt-1;
+  }
+  
+  .modal-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50;
+  }
+  
+  .modal-content {
+    @apply bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto;
+  }
+  
+  .table-container {
+    @apply overflow-x-auto max-w-full;
+  }
+  
+  .data-table {
+    @apply w-full border-collapse text-sm;
+  }
+  
+  .data-table th {
+    @apply bg-[var(--admin-primary)] text-white px-4 py-3 text-left font-semibold;
+  }
+  
+  .data-table td {
+    @apply px-4 py-3 border-b border-gray-200;
+  }
+  
+  .data-table tbody tr:hover {
+    @apply bg-gray-50;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-pulse-slow {
+  animation: pulse 2s infinite;
+}`,
+            'src/vite-env.d.ts': `/// <reference types="vite/client" />`,
+            'README.md': `# PSHSS School Management System
+
+A comprehensive school management system built with React, TypeScript, and Tailwind CSS.
+
+## Features
+
+- **Role-based Authentication**: Admin, Teacher, and Parent portals
+- **Admin Dashboard**: Manage teachers, students, bulk uploads, reports
+- **Teacher Portal**: Take attendance, upload marks, manage homework
+- **Parent Portal**: View child's attendance, marks, timetable, and fees
+- **Responsive Design**: Works on all devices
+- **Dark/Light Theme**: Toggle between themes
+- **Data Persistence**: Uses localStorage for demo purposes
+
+## Demo Credentials
+
+### Admin
+- Email: admin@pshss.edu
+- Password: admin123
+
+### Teacher
+- Email: priya@pshss.edu
+- Password: priya123
+
+### Parent
+- Email: diwakar@pshss.edu
+- Password: diwakar123
+
+## Installation
+
+1. Clone the repository
+2. Install dependencies: \`npm install\`
+3. Start development server: \`npm run dev\`
+4. Build for production: \`npm run build\`
+
+## Technology Stack
+
+- React 18
+- TypeScript
+- Tailwind CSS
+- Vite
+- Lucide React (icons)
+
+## Project Structure
+
+\`\`\`
+src/
+├── components/
+│   ├── Admin/          # Admin-specific components
+│   ├── Auth/           # Authentication components
+│   ├── Common/         # Shared components
+│   ├── Dashboards/     # Role-based dashboards
+│   ├── Layout/         # Layout components
+│   ├── Parent/         # Parent-specific components
+│   └── Teacher/        # Teacher-specific components
+├── contexts/           # React contexts
+├── App.tsx
+├── main.tsx
+└── index.css
+\`\`\`
+
+## License
+
+MIT License`
+        };
+
+        // Add all the React component files
+        const componentFiles = {
+            'src/contexts/AuthContext.tsx': `import React, { createContext, useContext, useState, useEffect } from 'react';
+
+export interface User {
+  id: number;
+  role: 'admin' | 'teacher' | 'parent';
+  name?: string;
+  email: string;
+  subject?: string;
+  assignedClass?: string;
+  student?: any;
+}
+
+interface AuthContextType {
+  user: User | null;
+  login: (email: string, password: string, role: string) => boolean;
+  logout: () => void;
+  isAuthenticated: boolean;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+
+  const login = (email: string, password: string, role: string): boolean => {
+    const schoolData = JSON.parse(localStorage.getItem('schoolData') || '{}');
+
+    switch (role) {
+      case 'admin':
+        if (email === schoolData.admin?.email && password === schoolData.admin?.password) {
+          setUser({ id: 1, role: 'admin', email });
+          logActivity('Admin logged in.');
+          return true;
+        }
+        break;
+      case 'teacher': {
+        const teacher = schoolData.teachers?.find(
+          (t: any) => t.email.toLowerCase() === email.toLowerCase() && t.password === password
+        );
+        if (teacher) {
+          setUser({ ...teacher, role: 'teacher' });
+          logActivity(\`Teacher \${teacher.name} logged in.\`);
+          return true;
+        }
+        break;
+      }
+      case 'parent': {
+        const student = schoolData.students?.find(
+          (s: any) => s.parentEmail.toLowerCase() === email.toLowerCase() && s.parentPassword === password
+        );
+        if (student) {
+          setUser({ id: student.id, role: 'parent', email, student });
+          logActivity(\`Parent of \${student.name} logged in.\`);
+          return true;
+        }
+        break;
+      }
+    }
+    return false;
+  };
+
+  const logout = () => {
+    if (user) {
+      const userLabel = user.role === 'parent' ? \`Parent of \${user.student?.name}\` : user.name || user.email;
+      logActivity(\`\${user.role} (\${userLabel}) logged out.\`);
+    }
+    setUser(null);
+  };
+
+  const logActivity = (message: string) => {
+    const schoolData = JSON.parse(localStorage.getItem('schoolData') || '{}');
+    const timestamp = new Date().toISOString();
+    schoolData.logs = schoolData.logs || [];
+    schoolData.logs.unshift({ timestamp, message });
+    localStorage.setItem('schoolData', JSON.stringify(schoolData));
+  };
+
+  return (
+    <AuthContext.Provider value={{
+      user,
+      login,
+      logout,
+      isAuthenticated: !!user
+    }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};`,
+            'src/contexts/ThemeContext.tsx': `import React, { createContext, useContext, useState, useEffect } from 'react';
+
+interface ThemeContextType {
+  isDark: boolean;
+  toggleTheme: () => void;
+}
+
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
+};
+
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('pshssTheme');
+    const prefersDark = stored === 'dark';
+    setIsDark(prefersDark);
+    document.body.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = !isDark;
+    setIsDark(newTheme);
+    localStorage.setItem('pshssTheme', newTheme ? 'dark' : 'light');
+    document.body.setAttribute('data-theme', newTheme ? 'dark' : 'light');
+  };
+
+  return (
+    <ThemeContext.Provider value={{ isDark, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};`,
+            'src/contexts/DataContext.tsx': `import React, { createContext, useContext, useState, useEffect } from 'react';
+
+interface Teacher {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  subject: string;
+  assignedClass: string;
+}
+
+interface Student {
+  id: number;
+  name: string;
+  class: string;
+  rollNo: string;
+  parentEmail: string;
+  parentPassword: string;
+  feeStatus: string;
+  attendance: Array<{ date: string; status: string }>;
+  marks: Array<{ subject: string; score: number; date: string }>;
+}
+
+interface SchoolData {
+  admin: { email: string; password: string };
+  teachers: Teacher[];
+  students: Student[];
+  circulars: Array<{ id: number; title: string; date: string; text: string }>;
+  logs: Array<{ timestamp: string; message: string }>;
+  timetable?: any;
+  homework?: any[];
+}
+
+interface DataContextType {
+  data: SchoolData;
+  updateData: (newData: Partial<SchoolData>) => void;
+  refreshData: () => void;
+}
+
+const DataContext = createContext<DataContextType | undefined>(undefined);
+
+export const useData = () => {
+  const context = useContext(DataContext);
+  if (!context) {
+    throw new Error('useData must be used within a DataProvider');
+  }
+  return context;
+};
+
+export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [data, setData] = useState<SchoolData>({
+    admin: { email: '', password: '' },
+    teachers: [],
+    students: [],
+    circulars: [],
+    logs: []
+  });
+
+  const initializeData = () => {
+    if (!localStorage.getItem('schoolData')) {
+      const initialData: SchoolData = {
+        admin: { email: "admin@pshss.edu", password: "admin123" },
+        teachers: [
+          {
+            id: 1,
+            name: "Priya Sharma",
+            email: "priya@pshss.edu",
+            password: "priya123",
+            subject: "Mathematics",
+            assignedClass: "12-A"
+          }
+        ],
+        students: [
+          {
+            id: 1,
+            name: "Rahul Kumar",
+            class: "12-A",
+            rollNo: "12A01",
+            parentEmail: "diwakar@pshss.edu",
+            parentPassword: "diwakar123",
+            feeStatus: "Paid",
+            attendance: [],
+            marks: []
+          },
+          {
+            id: 2,
+            name: "Anjali Singh",
+            class: "12-B",
+            rollNo: "12B01",
+            parentEmail: "chandru@pshss.edu",
+            parentPassword: "chandru123",
+            feeStatus: "Paid",
+            attendance: [],
+            marks: []
+          }
+        ],
+        circulars: [
+          {
+            id: 1,
+            title: "Holiday Announcement",
+            date: "2024-07-10",
+            text: "School will remain closed on 15th August for Independence Day."
+          }
+        ],
+        logs: []
+      };
+      localStorage.setItem('schoolData', JSON.stringify(initialData));
+      setData(initialData);
+    } else {
+      const stored = JSON.parse(localStorage.getItem('schoolData')!);
+      setData(stored);
+    }
+  };
+
+  const updateData = (newData: Partial<SchoolData>) => {
+    const updated = { ...data, ...newData };
+    setData(updated);
+    localStorage.setItem('schoolData', JSON.stringify(updated));
+  };
+
+  const refreshData = () => {
+    const stored = JSON.parse(localStorage.getItem('schoolData') || '{}');
+    setData(stored);
+  };
+
+  useEffect(() => {
+    initializeData();
+  }, []);
+
+  return (
+    <DataContext.Provider value={{ data, updateData, refreshData }}>
+      {children}
+    </DataContext.Provider>
+  );
+};`
+        };
+
+        // Merge all files
+        Object.assign(files, componentFiles);
+
+        // Populate file list
+        const fileList = document.getElementById('fileList');
+        Object.keys(files).forEach(filename => {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.innerHTML = `
+                <span class="file-name">${filename}</span>
+                <button class="download-btn" onclick="downloadFile('${filename}')">Download</button>
+            `;
+            fileList.appendChild(fileItem);
+        });
+
+        function downloadFile(filename) {
+            const content = files[filename];
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadAllFiles() {
+            const zip = new JSZip();
+            
+            // Add all files to zip
+            Object.keys(files).forEach(filename => {
+                zip.file(filename, files[filename]);
+            });
+
+            // Generate and download zip
+            zip.generateAsync({ type: 'blob' }).then(function(content) {
+                const url = URL.createObjectURL(content);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'pshss-school-management-system.zip';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        }
+
+        // Make functions global
+        window.downloadFile = downloadFile;
+        window.downloadAllFiles = downloadAllFiles;
+    </script>
+</body>
+</html>
